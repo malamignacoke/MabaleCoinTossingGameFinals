@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">MabaleCoinTossingGameFinals</string>
+
+    //FOR BUTTONS
+    <string name="play_btn">PLAY</string>
+    <string name="instructions_btn">INSTRUCTIONS</string>
+    <string name="back_btn">BACK</string>
+
+    //FOR DROPDOWNS
+    <string name="checkans_title">HOW TO CHECK THE ANSWER?</string>
+    <string name="checkans_desc">edi lagay mo sagot mo :></string>
+    <string name="playgame_title">HOW TO PLAY THE GAME?</string>
+    <string name="playgame_desc">play game lang hehe</string>
+
+    //FOR ICONS
+    <string name="expand_desc">See more or less info.</string>
 </resources>
