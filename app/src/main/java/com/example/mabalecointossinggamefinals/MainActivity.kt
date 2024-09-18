@@ -7,8 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,6 +43,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.materialIcon
 import androidx.compose.material.icons.materialPath
@@ -48,11 +54,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import com.example.mabalecointossinggamefinals.ui.theme.MabaleCoinTossingGameFinalsTheme
+import kotlin.math.round
 
-public val Icons.Filled.ExpandMore: ImageVector
+public val Icons.Filled.ExpandMore: ImageVector //Drop-down Button ICON
     get() {
         if (_expandMore != null) {
             return _expandMore!!
@@ -73,7 +84,8 @@ public val Icons.Filled.ExpandMore: ImageVector
 
 private var _expandMore: ImageVector? = null
 
-public val Icons.Filled.ExpandLess: ImageVector
+
+public val Icons.Filled.ExpandLess: ImageVector //Drop-up Button ICON
     get() {
         if (_expandLess != null) {
             return _expandLess!!
@@ -158,7 +170,7 @@ fun AlternatingScreen(navController: NavHostController = rememberNavController()
     )
     NavHost(
         navController = navController,
-        startDestination = "DefaultScreen"
+        startDestination = "PlayScreen"
     ) {
         composable("DefaultScreen"){ MainDefaultScreen(navController = navController) }
         composable("PlayScreen"){ MainPlayScreen(navController = navController) }
@@ -247,10 +259,279 @@ fun MainDefaultScreen(modifier: Modifier = Modifier, navController: NavControlle
 
 @Composable
 fun MainPlayScreen(modifier: Modifier = Modifier, navController: NavController){
-    Text(
-        text = "HAHA meow?",
-        fontSize = 15.sp
-    )
+    var ANSclicked by remember { mutableStateOf("") }
+    var TAILclicked by remember { mutableStateOf("TAIL") }
+    var HEADclicked by remember { mutableStateOf("HEAD") }
+
+    var winIndicator by remember { mutableStateOf(0) }
+    var lossIndicator by remember { mutableStateOf(0) }
+    var gameIndicator by remember { mutableStateOf(1) }
+    var result by remember { mutableStateOf(1) }
+
+    var headCoin by remember { mutableStateOf("HEAD") }
+    var tailCoin by remember { mutableStateOf("TAIL") }
+    var isClicked by remember { mutableStateOf(false) }
+
+    var showCoin by remember { mutableStateOf(false) }
+
+    var ANSname by remember { mutableStateOf("") }
+    val nameResource = when (result) {
+        1 -> ANSname = stringResource(R.string.head)
+        else -> ANSname = stringResource(R.string.tail)
+    }
+
+    Column (
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row {
+            //GAME: 1
+            Text(
+                text = "GAME: ${gameIndicator}",
+                fontSize = 30.sp,
+                color = Color(0xFF66FCF1)
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .height(15.dp)
+        )
+        Row {
+            //WIN OR LOSE
+            Column {
+                Text(
+                    text = "WIN: ${winIndicator}",
+                    fontSize = 30.sp,
+                    color = Color(0xFF66FCF1)
+                )
+            }
+            Column (
+                modifier = Modifier
+                    .padding(start = 25.dp)
+            ){
+                Text(
+                    text = "LOSS: ${lossIndicator}",
+                    fontSize = 30.sp,
+                    color = Color(0xFF66FCF1)
+                )
+            }
+
+        }
+        Spacer(
+            modifier = Modifier
+                .height(15.dp)
+        )
+        Row {
+            //SHOW and TOSS COIN
+            Column {
+                //SHOW Btn
+                Button(
+                    onClick = {
+                        showCoin = !showCoin
+                        if (result==1){
+                            if(ANSclicked == headCoin){
+                                winIndicator += 1
+                            }else{
+                                lossIndicator += 1
+                            }
+                        }else if (result==2){
+                            if (ANSclicked == tailCoin){
+                                winIndicator += 1
+                            }else{
+                                lossIndicator += 1
+                            }
+                        }else{
+                            lossIndicator += 1
+                        }
+                        isClicked = !isClicked
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF202833),
+                        contentColor = Color(0xFFC5C6C8),
+                    ),
+                    enabled = !isClicked,
+                    modifier = Modifier
+                        .border(2.dp, Color(0xFF46A29F))
+                        .height(50.dp)
+                        .fillMaxWidth(.35f)
+                )  {
+                    Text(
+                        stringResource(R.string.show_btn),
+                        fontSize = 15.sp
+                    )
+                }
+            }
+            Column (
+                modifier = Modifier
+                    .padding(start = 25.dp)
+            ){
+                //TOSS Btn
+                Button(
+                    onClick = {
+                        result = (1..2).random()
+                        gameIndicator += 1
+                        isClicked = !isClicked
+                        if (!showCoin){
+                            showCoin = false
+                            ANSclicked = ""
+                        }else{
+                            showCoin = false
+                            ANSclicked = ""
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF202833),
+                        contentColor = Color(0xFFC5C6C8),
+                    ),
+                    modifier = Modifier
+                        .border(2.dp, Color(0xFF46A29F))
+                        .height(50.dp)
+                        .fillMaxWidth(.55f)
+                )  {
+                    Text(
+                        stringResource(R.string.toss_btn),
+                        fontSize = 15.sp
+                    )
+                }
+            }
+        }
+        Spacer(
+            modifier = Modifier
+                .height(15.dp)
+        )
+        Row (
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .background(color = Color(0xFF202833))
+                .border(2.dp, Color(0xFF46A29F))
+                .fillMaxHeight(.3f)
+                .fillMaxWidth(.734f)
+        ){
+            //Coin Preview
+            if (showCoin){
+                Button(
+                    onClick = {},
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF202833),
+                        contentColor = Color(0xFFC5C6C8),
+                    ),
+                    shape = CircleShape,
+                    border = BorderStroke(4.dp, Color(0xFF66FCF1)),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50.dp))
+                        .height(120.dp)
+                        .width(120.dp)
+                ){
+                    Text(text = ANSname)
+                }
+            }else if (!showCoin){
+                Button(
+                    onClick = {},
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF46A29F),
+                        contentColor = Color(0xFFC5C6C8),
+                    ),
+                    shape = CircleShape,
+                    border = BorderStroke(4.dp, Color(0xFF66FCF1)),
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50.dp))
+                        .height(120.dp)
+                        .width(120.dp)
+                ){
+
+                }
+            }
+            
+
+        }
+        Row (
+            modifier = Modifier
+                .background(color = Color(0xFF202833))
+                .border(2.dp, Color(0xFF46A29F))
+                .fillMaxHeight(.05f)
+                .fillMaxWidth(.734f)
+                .padding(start = 5.dp, top = 3.dp)
+        ){
+            //YOUR ANSWER: HEAD
+            Text(
+                text = "YOUR ANSWER: ${ANSclicked}",
+                fontSize = 15.sp,
+                color = Color(0xFF66FCF1)
+            )
+        }
+        Spacer(
+            modifier = Modifier
+                .height(15.dp)
+        )
+        Row {
+            //HEAD or TAIL
+            Column {
+                //HEAD Btn
+                Button(
+                    onClick = { ANSclicked = HEADclicked },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF202833),
+                        contentColor = Color(0xFFC5C6C8),
+                    ),
+                    modifier = Modifier
+                        .border(2.dp, Color(0xFF46A29F))
+                        .height(50.dp)
+                        .fillMaxWidth(.25f)
+                )  {
+                    Text(
+                        stringResource(R.string.head_btn),
+                        fontSize = 15.sp
+                    )
+                }
+            }
+            Column (
+                modifier = Modifier
+                    .padding(start = 25.dp)
+            ){
+                //TAIL Btn
+                Button(
+                    onClick = { ANSclicked = TAILclicked },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF202833),
+                        contentColor = Color(0xFFC5C6C8),
+                    ),
+                    modifier = Modifier
+                        .border(2.dp, Color(0xFF46A29F))
+                        .height(50.dp)
+                        .fillMaxWidth(.3f)
+                )  {
+                    Text(
+                        stringResource(R.string.tail_btn),
+                        fontSize = 15.sp
+                    )
+                }
+            }
+        }
+        Spacer(
+            modifier = Modifier
+                .height(15.dp)
+        )
+        Row {
+            //EXIT Btn
+            Button(
+                onClick = { navController.navigate("DefaultScreen") },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF202833),
+                    contentColor = Color(0xFFC5C6C8),
+                ),
+                modifier = Modifier
+                    .border(2.dp, Color(0xFF46A29F))
+                    .height(50.dp)
+                    .fillMaxWidth(.21f)
+            )  {
+                Text(
+                    stringResource(R.string.exit_btn),
+                    fontSize = 15.sp
+                )
+            }
+        }
+    }
 }
 
 @Composable
@@ -317,13 +598,8 @@ fun MainInstructionsScreen(modifier: Modifier = Modifier, navController: NavCont
 }
 
 //Dropdown
-
 @Composable
-fun Item(
-    titledesc: String,
-    descinfo:  String,
-    modifier: Modifier = Modifier
-) {
+fun Item(titledesc: String, descinfo:  String, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     Card(
         modifier = modifier
@@ -366,12 +642,14 @@ fun Item(
                 )
             }
             if (expanded) {
-                LazyColumn(modifier = Modifier.fillMaxSize(.8f)) {
+                LazyColumn(modifier = Modifier
+                    .fillMaxSize(.8f)
+                    .fillMaxHeight(.5f)) {
                     item {
                         //Description about the game.
                         Text(
                             text = descinfo,
-                            fontSize = 15.sp,
+                            fontSize = 20.sp,
                             textAlign = TextAlign.Justify,
                             color = Color(0xFFC5C6C8),
                             modifier = Modifier
