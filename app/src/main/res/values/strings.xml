@@ -19,7 +19,7 @@
 
     //FOR DROPDOWNS
     <string name="checkans_title">HOW TO CHECK THE ANSWER?</string>
-    <string name="checkans_desc">\n\nTo check the answer of your chosen button / pressed button, either HEAD BUTTON or TAIL BUTTON, just press the SHOW COIN BUTTON upper-left of the game. \n\n\nHere is a short information about me and the game. First of all I would like to introduce myself, I am John Carlo Mabale studying Bachelor of Science Information Technology (BSIT) at LYCEUM OF ALABANG (LOA) and I choose COIN TOSSING GAME as my mobile game application.</string>
+    <string name="checkans_desc">\n\nTo check the answer of your chosen button / pressed button, either HEAD BUTTON or TAIL BUTTON, just press the SHOW COIN BUTTON upper-left of the game. \n\n\nHere is a short information about me and the game. First of all I would like to introduce myself, I am John Carlo Mabale studying Bachelor of Science Information Technology (BSIT) at LYCEUM OF ALABANG (LOA) and I choose COIN TOSSING GAME as my mobile game application.\n\n</string>
     <string name="playgame_title">HOW TO PLAY THE GAME?</string>
     <string name="playgame_desc">STEP-BY-STEP TO PLAY THE GAME: \n\n1.Press the PLAY BUTTON. \n\n2.Choose one from between HEAD or TAIL BUTTON. \n\n3.Press SHOW COIN BUTTON to reveal the answer. \n\n4.Press TOSS COIN BUTTON to TOSS the COIN AGAIN. \n\n5.After pressing the TOSS COIN BUTTON the GAME indicator on the top will increase by 1 and the coin will be covered again so you can now choose your guess again. \n\n6.Press EXIT BUTTON to return to the Default Screen / Home Screen.\n\n</string>
 

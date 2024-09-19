@@ -63,6 +63,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.example.mabalecointossinggamefinals.ui.theme.MabaleCoinTossingGameFinalsTheme
 import kotlin.math.round
 
+// ICONS
 public val Icons.Filled.ExpandMore: ImageVector //Drop-down Button ICON
     get() {
         if (_expandMore != null) {
@@ -170,7 +171,7 @@ fun AlternatingScreen(navController: NavHostController = rememberNavController()
     )
     NavHost(
         navController = navController,
-        startDestination = "PlayScreen"
+        startDestination = "DefaultScreen"
     ) {
         composable("DefaultScreen"){ MainDefaultScreen(navController = navController) }
         composable("PlayScreen"){ MainPlayScreen(navController = navController) }
@@ -178,7 +179,7 @@ fun AlternatingScreen(navController: NavHostController = rememberNavController()
     }
 }
 
-@Composable
+@Composable //dito yung pinaka homescreen ng app
 fun MainDefaultScreen(modifier: Modifier = Modifier, navController: NavController){
     Column (
         modifier = modifier,
@@ -257,7 +258,7 @@ fun MainDefaultScreen(modifier: Modifier = Modifier, navController: NavControlle
     }
 }
 
-@Composable
+@Composable//dito yung screen after ma press yung play button
 fun MainPlayScreen(modifier: Modifier = Modifier, navController: NavController){
     var ANSclicked by remember { mutableStateOf("") }
     var TAILclicked by remember { mutableStateOf("TAIL") }
@@ -276,9 +277,18 @@ fun MainPlayScreen(modifier: Modifier = Modifier, navController: NavController){
 
     var ANSname by remember { mutableStateOf("") }
     val nameResource = when (result) {
-        1 -> ANSname = stringResource(R.string.head)
-        else -> ANSname = stringResource(R.string.tail)
+        1 ->  {
+            val headString = stringResource(R.string.head)
+            ANSname = stringResource(R.string.head)
+            headString
+        }
+        else ->  {
+            val tailString = stringResource(R.string.tail)
+            ANSname = stringResource(R.string.tail)
+            tailString
+        }
     }
+    val nameResImplement = nameResource.toString()
 
     Column (
         modifier = modifier,
@@ -423,7 +433,7 @@ fun MainPlayScreen(modifier: Modifier = Modifier, navController: NavController){
                         .height(120.dp)
                         .width(120.dp)
                 ){
-                    Text(text = ANSname)
+                    Text(text = nameResImplement)
                 }
             }else if (!showCoin){
                 Button(
@@ -534,7 +544,7 @@ fun MainPlayScreen(modifier: Modifier = Modifier, navController: NavController){
     }
 }
 
-@Composable
+@Composable//dito yung screen after ma press yung instruction button
 fun MainInstructionsScreen(modifier: Modifier = Modifier, navController: NavController){
     Column (
         modifier = modifier,
@@ -598,7 +608,7 @@ fun MainInstructionsScreen(modifier: Modifier = Modifier, navController: NavCont
 }
 
 //Dropdown
-@Composable
+@Composable//ito yung code para sa collapsible na may dropdown
 fun Item(titledesc: String, descinfo:  String, modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
     Card(
@@ -664,7 +674,7 @@ fun Item(titledesc: String, descinfo:  String, modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
+@Composable//dito nagpapalit palit yung dropdown to drop-up
 private fun ItemButton(expanded: Boolean,onClick: () -> Unit,modifier: Modifier = Modifier) {
     IconButton(
         onClick = onClick,
@@ -677,8 +687,6 @@ private fun ItemButton(expanded: Boolean,onClick: () -> Unit,modifier: Modifier 
         )
     }
 }
-
-
 
 @Preview(showBackground = true)
 @Composable
